@@ -61,7 +61,7 @@
         }
     </style>
 </head>
-<body class="bg-[#552DD9] min-h-screen flex items-center justify-center p-4 bg-dots overflow-hidden">
+<body class="bg-[#552DD9] min-h-screen flex items-center justify-center p-4 bg-dots overflow-auto">        
     <!-- Floating decorative elements -->
     <div class="fixed -top-20 -left-20 w-40 h-40 rounded-full bg-white/10 animate-float"></div>
     <div class="fixed -bottom-16 -right-16 w-32 h-32 rounded-full bg-white/10 animate-float-2"></div>
@@ -148,7 +148,7 @@
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirm-password').value;
-        const adminKey = document.getElementById('admin-key').value;
+        const adminkey = document.getElementById('admin-key').value;
 
         if (password !== confirmPassword) {
             alert("Passwords do not match.");
@@ -158,8 +158,9 @@
         }
 
         try {
-            const response = await fetch('https://your-backend-api.com/api/superadmin/signup', {
+            const response = await fetch('backendurl.com/super-admin/signup', {
                 method: 'POST',
+                credentials:"include",
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -167,10 +168,10 @@
                     name,
                     email,
                     password,
-                    adminKey
+                    adminkey
                 })
             });
-
+       
             const data = await response.json();
 
             if (response.ok) {
@@ -179,10 +180,10 @@
 
                 // Optional: redirect after 3s
                 setTimeout(() => {
-                    window.location.href = "super-admin-login.html";
+                    window.location.href = "/super-admin/login";
                 }, 3000);
             } else {
-                alert(data.message || "Failed to create account.");
+                alert(data.error || "Failed to create account.");
                 submitBtn.classList.remove('btn-loading');
                 submitBtn.disabled = false;
             }
