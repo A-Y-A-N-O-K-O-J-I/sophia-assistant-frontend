@@ -181,7 +181,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
             // Redirect or do something on success
             window.location.href = '/super-admin/dashboard';
         } else {
-            throw new Error(result.message || 'Login failed');
+            throw new Error(result.error || 'Invalid email or password');
         }
     } catch (error) {
         errorMessage.textContent = error.message;
