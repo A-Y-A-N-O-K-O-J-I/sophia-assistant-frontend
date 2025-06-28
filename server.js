@@ -9,6 +9,21 @@ app.get("/super-admin/login",(req,res) =>{
 app.get("/super-admin/signup",(req,res) =>{
 	res.sendFile(path.join(__dirname,"auth","super-admin-signup.html"));
 })
+app.get("/login",(req,res) =>{
+	res.sendFile(path.join(__dirname,"auth","user-login.html"));
+})
+app.get("/super-admin/dashboard",(req,res) =>{
+	res.sendFile(path.join(__dirname,"dash","super-admin-dash.html"));
+})
+app.get("/super-admin/charts.js",(req,res) =>{
+	res.sendFile(path.join(__dirname,"dash","charts.js"));
+})
+app.get("/super-admin/sidebar.js",(req,res) =>{
+	res.sendFile(path.join(__dirname,"dash","sidebar.js"));
+})
+app.get("/valid.js",(req,res) =>{
+	res.sendFile(path.join(__dirname,"auth","valid.js"));
+})
 app.get("/admin/login",(req,res) =>{
 	res.sendFile(path.join(__dirname,"auth","admin-login.html"));
 })

@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Super Admin Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src = "/valid.js"> </script>
+    <script> checkToken() </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1
     /animate.min.css"/>
     <style type="text/tailwindcss">
@@ -117,7 +120,7 @@
                     
                     <div class="text-center text-gray-500 animate__animated animate__fadeIn animate__delay-3s">
                         Need elevated access? 
-                        <a href="super-admin-signup.html" class="text-[#552DD9] font-semibold hover:underline transition-all">Request super admin</a>
+                        <a href="/super-admin/signup" class="text-[#552DD9] font-semibold hover:underline transition-all">Request super admin</a>
                     </div>
                 </form>
                 
@@ -172,14 +175,18 @@ document.getElementById('loginForm').addEventListener('submit', async function (
             headers: {
                 'Content-Type': 'application/json'
             },
+            credentials:"include",
             body: JSON.stringify({ email, password })
         });
 
         const result = await response.json();
 
         if (response.ok) {
-            // Redirect or do something on success
-            window.location.href = '/super-admin/dashboard';
+        	localStorage.setItem("name",result.user.name)
+            setTimeout(()=>{
+            	 window.location.href = '/super-admin/dashboard';
+            },4000)
+           
         } else {
             throw new Error(result.error || 'Invalid email or password');
         }
