@@ -11,8 +11,9 @@ async function checkToken() {
     }
     
   } catch (error) {
+  console.log(error);
   	if([403,400].includes(error.response.data.status)){
-  		const response2 = await axios.post("https://sophia-assistant-api.onrender.com/auth/refresh-token", {}, {
+  		const response2 = await axios.post("http://sophia-assistant-api.onrender.com/auth/refresh-token", {}, {
   		    withCredentials: true
   		  });
 

@@ -3,6 +3,7 @@ const path = require('path');
 const app = express();
 
 // Serve static files from the "auth" folder
+app.use(express.static(path.join(__dirname, 'public')));
 app.get("/super-admin/login",(req,res) =>{
 	res.sendFile(path.join(__dirname,"auth","super-admin-login.html"));
 })
@@ -21,9 +22,7 @@ app.get("/super-admin/charts.js",(req,res) =>{
 app.get("/super-admin/sidebar.js",(req,res) =>{
 	res.sendFile(path.join(__dirname,"dash","sidebar.js"));
 })
-app.get("/valid.js",(req,res) =>{
-	res.sendFile(path.join(__dirname,"auth","valid.js"));
-})
+
 app.get("/admin/login",(req,res) =>{
 	res.sendFile(path.join(__dirname,"auth","admin-login.html"));
 })

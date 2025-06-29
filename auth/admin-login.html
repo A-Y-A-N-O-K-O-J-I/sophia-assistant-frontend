@@ -180,7 +180,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         const result = await response.json();
 
         if (response.ok) {
-            // Redirect or do something on success
+            localStorage.setItem("name",result.user.name)
             window.location.href = '/admin/dashboard';
         } else {
             throw new Error(result.error || 'Login failed');

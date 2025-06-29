@@ -5,10 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Super Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src ="/dash/valid.js"></script>
+             <script>checkAccess()</script>
      <script src ="/super-admin/sidebar.js"></script>
      <script src ="/super-admin/charts.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+     
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
@@ -196,7 +200,7 @@
             <div class="p-4 lg:p-8">
                 <!-- Header -->
                 <div class="mb-6 lg:mb-8 animate__animated animate__fadeInDown">
-                    <h1 class="text-3xl lg:text-4xl font-bold text-gray-800 mb-2 glow-text">Hello, <span id = "username" class="text-purple-600">Efeurhobo Bullish </span></h1>
+                    <h1 class="text-3xl lg:text-4xl font-bold text-gray-800 mb-2 glow-text">Hello, <span id = "username" class="text-purple-600"></span></h1>
                     <p class="text-gray-600">Track members activities here</p>
                     <div class="w-20 h-1 bg-gradient-to-r from-purple-500 to-purple-300 rounded-full mt-2"></div>
                 </div>
