@@ -25,11 +25,14 @@ const checkAccess = async () => {
         return await checkAccess();
       } catch(error){
         console.log(error)
-      window.location.href = "/failed";
+        setTimeout(()=>{
+          window.location.href = "/failed";
+        },10000)
       }
     } else {
-      
+      setTimout(()=>{
       window.location.href = "/login";
+      },10000)
     }
   }
 };
