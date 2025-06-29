@@ -25,7 +25,7 @@ const checkAccess = async () => {
         return await checkAccess();
       } catch(error){
         console.log(error)
-      window.location.href = /failed;
+      window.location.href = "/failed";
       }
     } else {
       
