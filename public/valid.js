@@ -6,7 +6,9 @@ async function checkToken() {
     });
 
     if (response.data.status === 200 && response.data.role) {
+      setTimeout(()=>{
       window.location.href = `/${response.data.role}/dashboard`;
+      },10000)
       return;
     }
     
@@ -18,7 +20,9 @@ async function checkToken() {
   		  });
 
   		  if (response2.data.status === 200 && response2.data.role) {
+          setTimeout(()=>{
   		   window.location.href = `/${response2.data.role}/dashboard`;
+          },10000)
   		  }
   	}
   }
