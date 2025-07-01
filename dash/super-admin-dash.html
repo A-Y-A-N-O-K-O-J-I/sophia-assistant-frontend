@@ -200,7 +200,7 @@
             <div class="p-4 lg:p-8">
                 <!-- Header -->
                 <div class="mb-6 lg:mb-8 animate__animated animate__fadeInDown">
-                    <h1 class="text-3xl lg:text-4xl font-bold text-gray-800 mb-2 glow-text">Hello, <span id = "username" class="text-purple-600"></span></h1>
+                    <h1 class="text-3xl lg:text-4xl font-bold text-gray-800 mb-2 glow-text">Hello, <span id = "username" class="text-purple-600">loading...</span></h1>
                     <p class="text-gray-600">Track members activities here</p>
                     <div class="w-20 h-1 bg-gradient-to-r from-purple-500 to-purple-300 rounded-full mt-2"></div>
                 </div>
@@ -217,7 +217,7 @@
                             </div>
                             <span class="text-xs lg:text-sm text-purple-500 font-medium bg-purple-50 px-2 lg:px-3 py-1 rounded-full">Verified</span>
                         </div>
-                        <div class="text-2xl lg:text-3xl font-bold text-gray-800 mb-1">12</div>
+                        <div class="text-2xl lg:text-3xl font-bold text-gray-800 mb-1" id = "verified">loading...</div>
                         <div class="flex items-center text-xs lg:text-sm text-purple-500">
                             <svg class="w-3 lg:w-4 h-3 lg:h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"/>
@@ -236,7 +236,7 @@
                             </div>
                             <span class="text-xs lg:text-sm text-pink-500 font-medium bg-pink-50 px-2 lg:px-3 py-1 rounded-full">Not Verified</span>
                         </div>
-                        <div class="text-2xl lg:text-3xl font-bold text-gray-800 mb-1">5</div>
+                        <div class="text-2xl lg:text-3xl font-bold text-gray-800 mb-1" id = "not-verified">loading...</div>
                         <div class="flex items-center text-xs lg:text-sm text-pink-500">
                             <svg class="w-3 lg:w-4 h-3 lg:h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M12 13a1 1 0 100 2h5a1 1 0 001-1v-5a1 1 0 10-2 0v2.586l-4.293-4.293a1 1 0 00-1.414 0L8 9.586l-4.293-4.293a1 1 0 00-1.414 1.414l5 5a1 1 0 001.414 0L11 9.414 14.586 13H12z" clip-rule="evenodd"/>
@@ -255,7 +255,7 @@
                             </div>
                             <span class="text-xs lg:text-sm text-gray-500 font-medium bg-gray-50 px-2 lg:px-3 py-1 rounded-full">Banned</span>
                         </div>
-                        <div class="text-2xl lg:text-3xl font-bold text-gray-800 mb-1">10</div>
+                        <div class="text-2xl lg:text-3xl font-bold text-gray-800 mb-1" id = "banned">loading...</div>
                         <div class="flex items-center text-xs lg:text-sm text-gray-500">
                             <svg class="w-3 lg:w-4 h-3 lg:h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M12 13a1 1 0 100 2h5a1 1 0 001-1v-5a1 1 0 10-2 0v2.586l-4.293-4.293a1 1 0 00-1.414 0L8 9.586l-4.293-4.293a1 1 0 00-1.414 1.414l5 5a1 1 0 001.414 0L11 9.414 14.586 13H12z" clip-rule="evenodd"/>
@@ -345,6 +345,13 @@
             </div>
         </div>
     </div>
-    
+    <script> document.getElementById("username").textContent = localStorage.getItem("name") </script>
+    <script src = "/dash/dynamic.js"></script>
+    <script> 
+	 window.onload = () => {
+  getAllInfo();
+};
+    </script>
 </body>
 </html>
+
