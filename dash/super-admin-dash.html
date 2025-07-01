@@ -279,8 +279,8 @@
                         <canvas id="adminChart" width="400" height="200"></canvas>
                     </div>
                 </div>
-                
-                <!-- Admins List -->
+
+                <!-- Admins List Section -->
                 <div class="bg-white rounded-xl p-4 lg:p-6 shadow-lg border border-purple-100 animate__animated animate__fadeInUp">
                     <div class="flex justify-between items-center mb-3 lg:mb-4">
                         <h3 class="text-base lg:text-lg font-semibold text-gray-800">Admins</h3>
@@ -288,69 +288,87 @@
                             Add New
                         </button>
                     </div>
-                    
-                    <div class="space-y-2 lg:space-y-3">
-                        <!-- Admin 1 -->
-                        <div class="flex items-center justify-between p-3 lg:p-4 rounded-lg hover:bg-purple-50 transition-all duration-300 group">
-                            <div class="flex items-center space-x-3 lg:space-x-4">
-                                <div class="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-purple-200 to-purple-100 rounded-full flex items-center justify-center text-purple-600 font-bold shadow-inner">
-                                    SJ
-                                </div>
-                                <div>
-                                    <div class="text-sm lg:text-base font-medium text-gray-800 group-hover:text-purple-600">Stanlee James</div>
-                                    <div class="text-xs lg:text-sm text-gray-500">stanlee@example.com</div>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-1 lg:space-x-2">
-                                <span class="text-xs lg:text-sm text-green-500 font-medium bg-green-50 px-2 lg:px-3 py-1 rounded-full">Active</span>
-                                <div class="w-2 h-2 lg:w-3 lg:h-3 bg-green-500 rounded-full animate-pulse"></div>
-                            </div>
-                        </div>
-                        
-                        <!-- Admin 2 -->
-                        <div class="flex items-center justify-between p-3 lg:p-4 rounded-lg hover:bg-purple-50 transition-all duration-300 group">
-                            <div class="flex items-center space-x-3 lg:space-x-4">
-                                <div class="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-purple-200 to-purple-100 rounded-full flex items-center justify-center text-purple-600 font-bold shadow-inner">
-                                    TO
-                                </div>
-                                <div>
-                                    <div class="text-sm lg:text-base font-medium text-gray-800 group-hover:text-purple-600">Tunde Okafor</div>
-                                    <div class="text-xs lg:text-sm text-gray-500">tunde@example.com</div>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-1 lg:space-x-2">
-                                <span class="text-xs lg:text-sm text-red-500 font-medium bg-red-50 px-2 lg:px-3 py-1 rounded-full">Offline</span>
-                                <div class="w-2 h-2 lg:w-3 lg:h-3 bg-red-500 rounded-full"></div>
-                            </div>
-                        </div>
-                        
-                        <!-- Admin 3 -->
-                        <div class="flex items-center justify-between p-3 lg:p-4 rounded-lg hover:bg-purple-50 transition-all duration-300 group">
-                            <div class="flex items-center space-x-3 lg:space-x-4">
-                                <div class="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-purple-200 to-purple-100 rounded-full flex items-center justify-center text-purple-600 font-bold shadow-inner">
-                                    AM
-                                </div>
-                                <div>
-                                    <div class="text-sm lg:text-base font-medium text-gray-800 group-hover:text-purple-600">Amina Mohammed</div>
-                                    <div class="text-xs lg:text-sm text-gray-500">amina@example.com</div>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-1 lg:space-x-2">
-                                <span class="text-xs lg:text-sm text-yellow-500 font-medium bg-yellow-50 px-2 lg:px-3 py-1 rounded-full">Idle</span>
-                                <div class="w-2 h-2 lg:w-3 lg:h-3 bg-yellow-500 rounded-full"></div>
-                            </div>
-                        </div>
+                    <div id="admin-list" class="space-y-2 lg:space-y-3">
+                       
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
+                </div>
+                </div>
+                </div>
+                
+           
     <script> document.getElementById("username").textContent = localStorage.getItem("name") </script>
     <script src = "/dash/dynamic.js"></script>
-    <script> 
-	 window.onload = () => {
+    <script>
   getAllInfo();
-};
+    </script>
+    
+    <script>
+    
+    async function loadAdmins() {
+      const accessToken = localStorage.getItem("accessToken");
+    
+      try {
+        const res = await fetch("https://sophia-assistant-api.onrender.com/super-admin/dashboard", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        });
+    
+        const data = await res.json();
+        const admins = data.firstThreeAdmins || []; // assuming the API sends { admins: [...] }
+    
+        const adminList = document.getElementById("admin-list");
+    
+        if (admins.length === 0) {
+          adminList.innerHTML = `<div class="text-gray-500 text-sm text-center">No admins available</div>`;
+          return;
+        }
+    
+        let html = "";
+    
+        admins.slice(0, 3).forEach(admin => {
+          const initials = admin.name
+            .split(" ")
+            .map(n => n[0])
+            .join("")
+            .toUpperCase();
+    
+          const status = admin.status || "Active"; // You can change this logic
+          const statusColor = {
+            Active: "green",
+            Offline: "red",
+            Idle: "yellow"
+          }[status] || "gray";
+    
+          html += `
+            <div class="flex items-center justify-between p-3 lg:p-4 rounded-lg hover:bg-purple-50 transition-all duration-300 group">
+              <div class="flex items-center space-x-3 lg:space-x-4">
+                <div class="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-purple-200 to-purple-100 rounded-full flex items-center justify-center text-purple-600 font-bold shadow-inner">
+                  ${initials}
+                </div>
+                <div>
+                  <div class="text-sm lg:text-base font-medium text-gray-800 group-hover:text-purple-600">${admin.name}</div>
+                  <div class="text-xs lg:text-sm text-gray-500">${admin.email}</div>
+                </div>
+              </div>
+              <div class="flex items-center space-x-1 lg:space-x-2">
+                <span class="text-xs lg:text-sm text-${statusColor}-500 font-medium bg-${statusColor}-50 px-2 lg:px-3 py-1 rounded-full">${status}</span>
+                <div class="w-2 h-2 lg:w-3 lg:h-3 bg-${statusColor}-500 rounded-full ${status === 'Active' ? 'animate-pulse' : ''}"></div>
+              </div>
+            </div>
+          `;
+        });
+    
+        adminList.innerHTML = html;
+    
+      } catch (err) {
+        console.error("Failed to load admins:", err);
+        document.getElementById("admin-list").innerHTML = `<div class="text-red-500 text-sm text-center">Failed to load admins</div>`;
+      }
+    }
+    
+    window.onload = loadAdmins;
     </script>
 </body>
 </html>
