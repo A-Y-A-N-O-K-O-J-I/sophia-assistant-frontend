@@ -4,7 +4,7 @@ const checkAccess = async () => {
 
   // If no token at all, bounce the user
   if (!accessToken && !refreshToken) {
-    return window.location.href = "/login";
+    return window.location.href = "/";
   }
 
   try {

@@ -30,12 +30,14 @@ async function getAllInfo() {
         localStorage.setItem("accessToken", response.data.accessToken);
         return await getAllInfo();
 
-      } catch {
-        localStorage.clear();
+      } catch(error) {
+        	console.error(error)
         if (role === "user") {
           window.location.href = "/login";
+        	localStorage.clear();
         } else {
           window.location.href = `/${role}/login`;
+        	localStorage.clear();
         }
       }
     }
