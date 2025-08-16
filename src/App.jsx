@@ -33,7 +33,7 @@ function App() {
            <PairBotPage/>
          </UserProtectedRoute>
         }/>
-        <Route path = "*" element = {<NotFoundPage/>}/>
+       <Route path = "*" element = {<NotFoundPage/>}/>
     </Routes>
   </Router>
   )
