@@ -8,6 +8,7 @@ import UserProtectedRoute from "./auth/UserProtectedRoute";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFoundPage from "./pages/NotFound";
 import PairBotPage from "./pages/UserPairBot";
+import AdminManagement from "./pages/SuperAdminList";
 function App() {
   return (
   <Router>
@@ -16,6 +17,11 @@ function App() {
       <Route path = "/super-admin/dashboard" element = {
         <SuperAdminProtectedRoute>
           <SuperAdminDashboard />
+        </SuperAdminProtectedRoute>
+        } />
+      <Route path = "/super-admin/admins" element = {
+        <SuperAdminProtectedRoute>
+          <AdminManagement />
         </SuperAdminProtectedRoute>
         } />
       <Route path="/dashboard" element = {
