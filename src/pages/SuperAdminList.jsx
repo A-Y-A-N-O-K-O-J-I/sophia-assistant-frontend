@@ -10,6 +10,7 @@ import {
   CheckCircle,
   Users,
 } from "lucide-react";
+import SuperAdminSidebar from "../components/SuperAdminNavbar";
 
 const AdminManagement = () => {
   const [formData, setFormData] = useState({ name: "", email: "" });
@@ -157,6 +158,8 @@ const AdminManagement = () => {
   };
 
   return (
+    <>
+    <SuperAdminSidebar />
     <div className="ml-20 lg:ml-20 min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
@@ -441,6 +444,7 @@ const AdminManagement = () => {
         </AnimatePresence>
       </div>
     </div>
+    </>
   );
 };
 
