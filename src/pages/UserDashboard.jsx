@@ -12,12 +12,13 @@ import {
   Zap
 } from 'lucide-react';
 import UserSidebar from '../components/UserNavbar';
-
+import { useNavigate } from 'react-router-dom';
 const UserDashboard = () => {
   const [userInfo, setUserInfo] = useState({
     name: 'John Doe', // This would come from auth/context
     email: 'john@example.com'
   });
+  const navigate = useNavigate()
   const [botStatus, setBotStatus] = useState({
     isLinked: false,
     status: 'connecting', // 'active', 'inactive', 'connecting'
@@ -62,9 +63,7 @@ const UserDashboard = () => {
   }, [API_URL]);
 
   const handlePairBot = () => {
-    // Navigate to pair bot page
-    window.history.pushState({}, '', '/pair-bot');
-    // In real app: navigate('/pair-bot');
+    navigate('/pair-bot');
   };
 
   const getStatusIcon = () => {

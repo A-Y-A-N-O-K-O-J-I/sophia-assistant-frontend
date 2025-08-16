@@ -7,6 +7,7 @@ import AdminProtectedRoute from "./auth/AdminProtectedRoute";
 import UserProtectedRoute from "./auth/UserProtectedRoute";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFoundPage from "./pages/NotFound";
+import PairBotPage from "./pages/UserPairBot";
 function App() {
   return (
   <Router>
@@ -19,7 +20,7 @@ function App() {
         } />
       <Route path="/dashboard" element = {
         <UserProtectedRoute>
-          <UserDashboard />
+        <UserDashboard />
         </UserProtectedRoute>
         } />
       <Route path="/admin/dashboard" element = {
@@ -27,6 +28,11 @@ function App() {
           <AdminDashboard />
         </AdminProtectedRoute>
         } />
+        <Route path="/pair-bot" element = {
+         <UserProtectedRoute>
+           <PairBotPage/>
+         </UserProtectedRoute>
+        }/>
         <Route path = "*" element = {<NotFoundPage/>}/>
     </Routes>
   </Router>
