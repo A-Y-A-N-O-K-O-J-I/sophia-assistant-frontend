@@ -1,12 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import UserSidebar from '../components/UserNavbar';
 import { usePairBot } from '../hooks/usePairBot';
 import ErrorAlert from '../components/ErrorAlert';
 import ApiKeySection from '../components/ApiKeySection';
 import PairingSection from '../components/PairingSection';
+import SuccessResetSection from '../components/ResetSection';
+import axios from 'axios';
 
 const PairBotPage = () => {
+  const baseURL = import.meta.env.VITE_API_URL;
+async function pairingInfo() {
+  const response = await axios.post(`${baseURL}/`)
+}
+useEffect(()=>{
+  
+},[])
   const {
     // State
     apiKeyCopied,
@@ -86,7 +95,8 @@ const PairBotPage = () => {
             />
 
             {/* Pairing Section */}
-            <PairingSection
+            
+           { <PairingSection
               connectionStatus={connectionStatus}
               showPairing={showPairing}
               loading={loading}
@@ -99,7 +109,7 @@ const PairBotPage = () => {
               onGenerateQRCode={generateQRCode}
               onSwitchMethod={handleSwitchMethod}
               onRegenerate={handleRegenerate}
-            />
+            /> }
           </div>
         </div>
       </div>

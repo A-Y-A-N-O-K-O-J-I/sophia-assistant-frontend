@@ -8,8 +8,9 @@ import {
   Settings, 
   LogOut 
 } from 'lucide-react';
-
+import { useNavigate } from 'react-router-dom';
 const UserSidebar = () => {
+  const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false);
   const [activeRoute, setActiveRoute] = useState('/dashboard');
 
@@ -37,9 +38,7 @@ const UserSidebar = () => {
   const handleNavigation = (route, path) => {
     setActiveRoute(route);
     setIsOpen(false);
-    // In a real app, you'd use React Router here
-    // For demo purposes, we'll just update the URL
-    window.history.pushState({}, '', path);
+   navigate(path)
   };
 
   const handleLogout = () => {
@@ -94,8 +93,8 @@ const UserSidebar = () => {
                   onClick={() => handleNavigation(item.route, item.path)}
                   className={`w-full p-4 flex items-center justify-center mb-2 transition-all duration-300 ${
                     activeRoute === item.route
-                      ? 'bg-white bg-opacity-20 border-r-4 border-white'
-                      : 'hover:bg-white hover:bg-opacity-10'
+                      ? 'bg-purple-500 bg-opacity-20 border-r-4 border-purple-500'
+                      : 'hover:bg-purple-500 hover:bg-opacity-10'
                   }`}
                 >
                   <Icon 
@@ -178,8 +177,8 @@ const UserSidebar = () => {
                       onClick={() => handleNavigation(item.route, item.path)}
                       className={`w-full p-4 flex items-center space-x-4 rounded-xl mb-2 transition-all duration-300 ${
                         activeRoute === item.route
-                          ? 'bg-white bg-opacity-20 text-white border-l-4 border-white'
-                          : 'text-purple-200 hover:bg-white hover:bg-opacity-10 hover:text-white'
+                          ? 'bg-purple-500 bg-opacity-20 text-white border-l-4 border-purple-500'
+                          : 'text-purple-200 hover:bg-purple-500 hover:bg-opacity-10 hover:text-white'
                       }`}
                     >
                       <Icon size={24} />
@@ -253,8 +252,8 @@ const UserSidebar = () => {
                       onClick={() => handleNavigation(item.route, item.path)}
                       className={`w-full p-3 flex items-center space-x-3 rounded-xl mb-2 transition-all duration-300 ${
                         activeRoute === item.route
-                          ? 'bg-white bg-opacity-20 text-white border-l-4 border-white'
-                          : 'text-purple-200 hover:bg-white hover:bg-opacity-10 hover:text-white'
+                          ? 'bg-purple-500 bg-opacity-20 text-white border-l-4 border-purple-500'
+                          : 'text-purple-200 hover:bg-purple-500 hover:bg-opacity-10 hover:text-white'
                       }`}
                     >
                       <Icon size={20} />
