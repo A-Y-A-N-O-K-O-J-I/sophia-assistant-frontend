@@ -1,53 +1,40 @@
+import React from 'react';
 import { motion } from 'framer-motion';
 import UserSidebar from '../components/UserNavbar';
 import { usePairBot } from '../hooks/usePairBot';
 import ErrorAlert from '../components/ErrorAlert';
 import ApiKeySection from '../components/ApiKeySection';
 import PairingSection from '../components/PairingSection';
-import SuccessResetSection from '../components/ResetSection';
 
 const PairBotPage = () => {
-
   const {
-    // State
-    apiKeyCopied,
-    showPairing,
-    timeRemaining,
-    showApiKey,
-    loading,
-    apiKeyLoading,
-    connectionStatus,
-    error,
-    pairingMethod,
-    apiKey,
-    pairingCode,
-    qrCodeData,
+    // User info
+    userInfo,
     
-    // Actions
+    // Shared state
+    apiKeyCopied,
+    showApiKey,
+    apiKeyLoading,
+    error,
+    apiKey,
+    
+    // Phone numbers
+    mainPhoneNumber,
+    premiumPhoneNumber,
+    
+    // Bot states
+    mainBot,
+    premiumBot,
+    
+    // Shared actions
     setShowApiKey,
     setError,
-    generatePairingCode,
-    generateQRCode,
-    resetConnection,
-    copyApiKey
+    copyApiKey,
+    
+    // Bot-specific actions
+    mainBotActions,
+    premiumBotActions
   } = usePairBot();
-
-  // Handler functions for pairing actions
-  const handleSwitchMethod = () => {
-    if (pairingMethod === 'code') {
-      generateQRCode();
-    } else {
-      generatePairingCode();
-    }
-  };
-
-  const handleRegenerate = () => {
-    if (pairingMethod === 'code') {
-      generatePairingCode();
-    } else {
-      generateQRCode();
-    }
-  };
 
   return (
     <>
@@ -67,12 +54,24 @@ const PairBotPage = () => {
             <p className="text-purple-600 text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-4">
               Connect your WhatsApp account to start automating conversations
             </p>
+            
+            {/* Premium Badge */}
+            {userInfo.isPremium && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3 }}
+                className="mt-6 inline-block px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-full font-semibold shadow-lg"
+              >
+                👑 Premium Account - Dual Bot Support
+              </motion.div>
+            )}
           </motion.div>
 
           {/* Error/Success Alert */}
           <ErrorAlert 
-            error={error} 
-            onClose={() => setError(null)} 
+            error={error}
+            onClose={() => setError(null)}
           />
 
           <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
@@ -86,22 +85,49 @@ const PairBotPage = () => {
               onCopyApiKey={copyApiKey}
             />
 
-            {/* Pairing Section */}
-            
-           { <PairingSection
-              connectionStatus={connectionStatus}
-              showPairing={showPairing}
-              loading={loading}
-              pairingMethod={pairingMethod}
-              pairingCode={pairingCode}
-              qrCodeData={qrCodeData}
-              timeRemaining={timeRemaining}
-              onResetConnection={resetConnection}
-              onGeneratePairingCode={generatePairingCode}
-              onGenerateQRCode={generateQRCode}
-              onSwitchMethod={handleSwitchMethod}
-              onRegenerate={handleRegenerate}
-            /> }
+            {/* Main Bot Pairing Section - Always shows */}
+            <PairingSection
+              botType="main"
+              phoneNumber={mainPhoneNumber}
+              connectionStatus={mainBot.connectionStatus}
+              showPairing={mainBot.showPairing}
+              loading={mainBot.loading}
+              pairingMethod={mainBot.pairingMethod}
+              pairingCode={mainBot.pairingCode}
+              qrCodeData={mainBot.qrCodeData}
+              timeRemaining={mainBot.timeRemaining}
+              onResetConnection={mainBotActions.resetConnection}
+              onGeneratePairingCode={mainBotActions.generatePairingCode}
+              onGenerateQRCode={mainBotActions.generateQRCode}
+              onSwitchMethod={mainBotActions.switchMethod}
+              onRegenerate={mainBotActions.regenerate}
+            />
+
+            {/* Premium Bot Pairing Section - Only shows for premium users */}
+            {userInfo.isPremium && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.8 }}
+              >
+                <PairingSection
+                  botType="premium"
+                  phoneNumber={premiumPhoneNumber}
+                  connectionStatus={premiumBot.connectionStatus}
+                  showPairing={premiumBot.showPairing}
+                  loading={premiumBot.loading}
+                  pairingMethod={premiumBot.pairingMethod}
+                  pairingCode={premiumBot.pairingCode}
+                  qrCodeData={premiumBot.qrCodeData}
+                  timeRemaining={premiumBot.timeRemaining}
+                  onResetConnection={premiumBotActions.resetConnection}
+                  onGeneratePairingCode={premiumBotActions.generatePairingCode}
+                  onGenerateQRCode={premiumBotActions.generateQRCode}
+                  onSwitchMethod={premiumBotActions.switchMethod}
+                  onRegenerate={premiumBotActions.regenerate}
+                />
+              </motion.div>
+            )}
           </div>
         </div>
       </div>

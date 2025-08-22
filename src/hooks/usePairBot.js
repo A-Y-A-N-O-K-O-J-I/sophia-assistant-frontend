@@ -1,47 +1,128 @@
 import { useState, useEffect } from 'react';
 
 export const usePairBot = () => {
-  const [apiKeyCopied, setApiKeyCopied] = useState(false);
-  const [showPairing, setShowPairing] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState(120);
-  const [showApiKey, setShowApiKey] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [apiKeyLoading, setApiKeyLoading] = useState(true);
-  const [connectionStatus, setConnectionStatus] = useState('disconnected');
-  const [error, setError] = useState(null);
-  const [pairingMethod, setPairingMethod] = useState('code');
+  // User info state
+  const [userInfo, setUserInfo] = useState({
+    name: '',
+    email: '',
+    isPremium: false
+  });
   
-  // API data
+  // Shared state
+  const [apiKeyCopied, setApiKeyCopied] = useState(false);
+  const [showApiKey, setShowApiKey] = useState(false);
+  const [apiKeyLoading, setApiKeyLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [apiKey, setApiKey] = useState('');
-  const [pairingCode, setPairingCode] = useState('');
-  const [qrCodeData, setQrCodeData] = useState('');
+  
+  // Phone numbers
+  const [mainPhoneNumber, setMainPhoneNumber] = useState('');
+  const [premiumPhoneNumber, setPremiumPhoneNumber] = useState('');
+  
+  // Main bot state
+  const [mainBot, setMainBot] = useState({
+    showPairing: false,
+    timeRemaining: 120,
+    loading: false,
+    connectionStatus: 'disconnected',
+    pairingMethod: 'code',
+    pairingCode: '',
+    qrCodeData: ''
+  });
+  
+  // Premium bot state
+  const [premiumBot, setPremiumBot] = useState({
+    showPairing: false,
+    timeRemaining: 120,
+    loading: false,
+    connectionStatus: 'disconnected',
+    pairingMethod: 'code',
+    pairingCode: '',
+    qrCodeData: ''
+  });
 
   const API_URL = import.meta.env.VITE_API_URL;
 
-  // Check bot status function
-  const checkBotStatus = async () => {
+  // Check user premium status
+  const checkPremiumStatus = async () => {
     try {
-      const response = await fetch(`${API_URL}/user/bot-status`, {
+      const response = await fetch(`${API_URL}/user/dashboard`, {
         method: "POST",
         credentials: 'include'
       });
 
-      if (!response.ok) throw new Error('Failed to check bot status');
+      if (!response.ok) throw new Error('Failed to check premium status');
+
+      const data = await response.json();
+      setUserInfo(data.userInfo || userInfo);
+    } catch (err) {
+      console.error('Premium status check error:', err);
+    }
+  };
+
+  // Get phone number for specific bot
+  const getPhoneNumber = async (botType) => {
+    try {
+      const response = await fetch(`${API_URL}/user/get-phone`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ bot: botType })
+      });
+
+      if (!response.ok) throw new Error(`Failed to get ${botType} phone number`);
+
+      const data = await response.json();
+      
+      if (botType === 'main') {
+        setMainPhoneNumber(data.phoneNumber || 'Not Set');
+      } else {
+        setPremiumPhoneNumber(data.phoneNumber || 'Not Set');
+      }
+    } catch (err) {
+      console.error(`Phone number fetch error for ${botType}:`, err);
+      if (botType === 'main') {
+        setMainPhoneNumber('Error loading 1');
+      } else {
+        setPremiumPhoneNumber('Error loading');
+      }
+    }
+  };
+
+  // Check bot status function
+  const checkBotStatus = async (botType) => {
+    try {
+      const endpoint = botType === 'main' ? '/user/bot-status' : '/user/premium-bot-status';
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        method: "POST",
+        credentials: 'include'
+      });
+
+      if (!response.ok) throw new Error(`Failed to check ${botType} bot status`);
 
       const data = await response.json();
       
       if (data.connected) {
-        setConnectionStatus('connected');
-        setTimeout(() => {
-          setShowPairing(false);
-        }, 3000);
+        if (botType === 'main') {
+          setMainBot(prev => ({ ...prev, connectionStatus: 'connected' }));
+          setTimeout(() => {
+            setMainBot(prev => ({ ...prev, showPairing: false }));
+          }, 3000);
+        } else {
+          setPremiumBot(prev => ({ ...prev, connectionStatus: 'connected' }));
+          setTimeout(() => {
+            setPremiumBot(prev => ({ ...prev, showPairing: false }));
+          }, 3000);
+        }
       }
     } catch (err) {
-      console.error('Status check error:', err);
+      console.error(`${botType} status check error:`, err);
     }
   };
 
-  // Fetch API key
+  // Fetch API key (shared for both bots)
   const fetchApiKey = async () => {
     try {
       setApiKeyLoading(true);
@@ -63,89 +144,124 @@ export const usePairBot = () => {
   };
 
   // Generate pairing code
-  const generatePairingCode = async () => {
+  const generatePairingCode = async (botType) => {
     try {
-      setLoading(true);
-      setError(null);
-      setPairingMethod('code');
+      const setBotState = botType === 'main' ? setMainBot : setPremiumBot;
       
-      const response = await fetch(`${API_URL}/user/pair`, {
+      setBotState(prev => ({ ...prev, loading: true }));
+      setError(null);
+      
+      const endpoint = botType === 'main' ? '/user/pair' : '/user/premium-pair';
+      const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
-        credentials: "include"
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: "include",
+        body: JSON.stringify({ bot: botType })
       });
 
-      if (!response.ok) throw new Error('Failed to generate pairing code');
+      if (!response.ok) throw new Error(`Failed to generate ${botType} pairing code`);
 
       const data = await response.json();
-      setPairingCode(data.code);
-      setQrCodeData('');
-      setShowPairing(true);
-      setConnectionStatus('waiting');
-      setTimeRemaining(120);
+      
+      setBotState(prev => ({
+        ...prev,
+        pairingMethod: 'code',
+        pairingCode: data.code,
+        qrCodeData: '',
+        showPairing: true,
+        connectionStatus: 'waiting',
+        timeRemaining: 120,
+        loading: false
+      }));
     } catch (err) {
-      setError('Failed to generate pairing code. Please try again.');
-      console.error('Pairing error:', err);
-    } finally {
-      setLoading(false);
+      setError(`Failed to generate ${botType} pairing code. Please try again.`);
+      console.error(`${botType} pairing error:`, err);
+      const setBotState = botType === 'main' ? setMainBot : setPremiumBot;
+      setBotState(prev => ({ ...prev, loading: false }));
     }
   };
 
   // Generate QR code
-  const generateQRCode = async () => {
+  const generateQRCode = async (botType) => {
     try {
-      setLoading(true);
-      setError(null);
-      setPairingMethod('qr');
+      const setBotState = botType === 'main' ? setMainBot : setPremiumBot;
       
-      const response = await fetch(`${API_URL}/user/qr-code`, {
+      setBotState(prev => ({ ...prev, loading: true }));
+      setError(null);
+      
+      const endpoint = botType === 'main' ? '/user/qr-code' : '/user/premium-qr-code';
+      const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
-        credentials: "include"
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: "include",
+        body: JSON.stringify({ bot: botType })
       });
 
-      if (!response.ok) throw new Error('Failed to generate QR code');
+      if (!response.ok) throw new Error(`Failed to generate ${botType} QR code`);
 
       const data = await response.json();
-      setQrCodeData(data.qr);
-      setPairingCode('');
-      setShowPairing(true);
-      setConnectionStatus('waiting');
-      setTimeRemaining(120);
+      
+      setBotState(prev => ({
+        ...prev,
+        pairingMethod: 'qr',
+        qrCodeData: data.qr,
+        pairingCode: '',
+        showPairing: true,
+        connectionStatus: 'waiting',
+        timeRemaining: 120,
+        loading: false
+      }));
     } catch (err) {
-      setError('Failed to generate QR code. Please try again.');
-      console.error('QR error:', err);
-    } finally {
-      setLoading(false);
+      setError(`Failed to generate ${botType} QR code. Please try again.`);
+      console.error(`${botType} QR error:`, err);
+      const setBotState = botType === 'main' ? setMainBot : setPremiumBot;
+      setBotState(prev => ({ ...prev, loading: false }));
     }
   };
 
   // Reset connection
-  const resetConnection = async () => {
+  const resetConnection = async (botType) => {
     try {
-      setLoading(true);
+      const setBotState = botType === 'main' ? setMainBot : setPremiumBot;
+      
+      setBotState(prev => ({ ...prev, loading: true }));
       setError(null);
       
-      const response = await fetch(`${API_URL}/user/reset-bot`, {
+      const endpoint = botType === 'main' ? '/user/reset-bot' : '/user/reset-premium-bot';
+      const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
-        credentials: "include"
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: "include",
+        body: JSON.stringify({ bot: botType })
       });
 
-      if (!response.ok) throw new Error('Failed to reset connection');
+      if (!response.ok) throw new Error(`Failed to reset ${botType} connection`);
 
       const data = await response.json();
-      setConnectionStatus('disconnected');
-      setShowPairing(false);
-      setPairingCode('');
-      setQrCodeData('');
-      setTimeRemaining(120);
-      setError(null);
+      
+      setBotState({
+        showPairing: false,
+        timeRemaining: 120,
+        loading: false,
+        connectionStatus: 'disconnected',
+        pairingMethod: 'code',
+        pairingCode: '',
+        qrCodeData: ''
+      });
       
       setError(data.message);
       setTimeout(() => setError(null), 3000);
     } catch (err) {
-      setError('Failed to reset connection. Please try again.');
-      console.error('Reset error:', err);
-    } finally {
-      setLoading(false);
+      setError(`Failed to reset ${botType} connection. Please try again.`);
+      console.error(`${botType} reset error:`, err);
+      const setBotState = botType === 'main' ? setMainBot : setPremiumBot;
+      setBotState(prev => ({ ...prev, loading: false }));
     }
   };
 
@@ -156,60 +272,152 @@ export const usePairBot = () => {
     setTimeout(() => setApiKeyCopied(false), 2000);
   };
 
+  // Main bot action handlers
+  const mainBotActions = {
+    generatePairingCode: () => generatePairingCode('main'),
+    generateQRCode: () => generateQRCode('main'),
+    resetConnection: () => resetConnection('main'),
+    switchMethod: () => {
+      if (mainBot.pairingMethod === 'code') {
+        generateQRCode('main');
+      } else {
+        generatePairingCode('main');
+      }
+    },
+    regenerate: () => {
+      if (mainBot.pairingMethod === 'code') {
+        generatePairingCode('main');
+      } else {
+        generateQRCode('main');
+      }
+    }
+  };
+
+  // Premium bot action handlers
+  const premiumBotActions = {
+    generatePairingCode: () => generatePairingCode('assistant'),
+    generateQRCode: () => generateQRCode('assistant'),
+    resetConnection: () => resetConnection('assistant'),
+    switchMethod: () => {
+      if (premiumBot.pairingMethod === 'code') {
+        generateQRCode('assistant');
+      } else {
+        generatePairingCode('assistant');
+      }
+    },
+    regenerate: () => {
+      if (premiumBot.pairingMethod === 'code') {
+        generatePairingCode('assistant');
+      } else {
+        generateQRCode('assistant');
+      }
+    }
+  };
+
   // Effects
   useEffect(() => {
     fetchApiKey();
+    checkPremiumStatus();
   }, []);
 
-  // Timer for pairing code/QR expiry
+  // Get phone numbers when premium status is loaded
+  useEffect(() => {
+    if (userInfo.name) { // Only when user info is loaded
+      getPhoneNumber('main');
+      if (userInfo.isPremium) {
+        getPhoneNumber('assistant');
+      }
+    }
+  }, [userInfo.isPremium, userInfo.name]);
+
+  // Timer for main bot pairing code/QR expiry
   useEffect(() => {
     let interval = null;
-    if (showPairing && timeRemaining > 0) {
+    if (mainBot.showPairing && mainBot.timeRemaining > 0) {
       interval = setInterval(() => {
-        setTimeRemaining(prev => prev - 1);
+        setMainBot(prev => ({ ...prev, timeRemaining: prev.timeRemaining - 1 }));
       }, 1000);
-    } else if (timeRemaining === 0) {
-      setShowPairing(false);
-      setTimeRemaining(120);
-      setConnectionStatus('disconnected');
-      setPairingCode('');
-      setQrCodeData('');
+    } else if (mainBot.timeRemaining === 0) {
+      setMainBot(prev => ({
+        ...prev,
+        showPairing: false,
+        timeRemaining: 120,
+        connectionStatus: 'disconnected',
+        pairingCode: '',
+        qrCodeData: ''
+      }));
     }
     return () => clearInterval(interval);
-  }, [showPairing, timeRemaining]);
+  }, [mainBot.showPairing, mainBot.timeRemaining]);
 
-  // Polling for bot status
+  // Timer for premium bot pairing code/QR expiry
+  useEffect(() => {
+    let interval = null;
+    if (premiumBot.showPairing && premiumBot.timeRemaining > 0) {
+      interval = setInterval(() => {
+        setPremiumBot(prev => ({ ...prev, timeRemaining: prev.timeRemaining - 1 }));
+      }, 1000);
+    } else if (premiumBot.timeRemaining === 0) {
+      setPremiumBot(prev => ({
+        ...prev,
+        showPairing: false,
+        timeRemaining: 120,
+        connectionStatus: 'disconnected',
+        pairingCode: '',
+        qrCodeData: ''
+      }));
+    }
+    return () => clearInterval(interval);
+  }, [premiumBot.showPairing, premiumBot.timeRemaining]);
+
+  // Polling for main bot status
   useEffect(() => {
     let statusInterval = null;
-    if (connectionStatus === 'waiting') {
+    if (mainBot.connectionStatus === 'waiting') {
       statusInterval = setInterval(() => {
-        checkBotStatus();
+        checkBotStatus('main');
       }, 3000);
     }
     return () => clearInterval(statusInterval);
-  }, [connectionStatus, API_URL]);
+  }, [mainBot.connectionStatus]);
+
+  // Polling for premium bot status
+  useEffect(() => {
+    let statusInterval = null;
+    if (premiumBot.connectionStatus === 'waiting') {
+      statusInterval = setInterval(() => {
+        checkBotStatus('assistant');
+      }, 3000);
+    }
+    return () => clearInterval(statusInterval);
+  }, [premiumBot.connectionStatus]);
 
   return {
-    // State
-    apiKeyCopied,
-    showPairing,
-    timeRemaining,
-    showApiKey,
-    loading,
-    apiKeyLoading,
-    connectionStatus,
-    error,
-    pairingMethod,
-    apiKey,
-    pairingCode,
-    qrCodeData,
+    // User info
+    userInfo,
     
-    // Actions
+    // Shared state
+    apiKeyCopied,
+    showApiKey,
+    apiKeyLoading,
+    error,
+    apiKey,
+    
+    // Phone numbers
+    mainPhoneNumber,
+    premiumPhoneNumber,
+    
+    // Bot states
+    mainBot,
+    premiumBot,
+    
+    // Shared actions
     setShowApiKey,
     setError,
-    generatePairingCode,
-    generateQRCode,
-    resetConnection,
-    copyApiKey
+    copyApiKey,
+    
+    // Bot-specific actions
+    mainBotActions,
+    premiumBotActions
   };
 };

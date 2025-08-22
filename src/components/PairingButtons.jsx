@@ -46,7 +46,7 @@ const PairingButtons = ({
               <Zap size={32} />
             )}
             <span className="text-lg">Pairing Code</span>
-            <span className="text-sm opacity-90">Get a 6-digit code</span>
+            <span className="text-sm opacity-90">Get a 8-digit code</span>
           </div>
         </motion.button>
 
@@ -65,7 +65,7 @@ const PairingButtons = ({
               <QrCode size={32} />
             )}
             <span className="text-lg">QR Code</span>
-            <span className="text-sm opacity-90">Scan with camera</span>
+            <span className="text-sm opacity-90">Scan with Whatsapp</span>
           </div>
         </motion.button>
       </div>

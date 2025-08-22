@@ -9,11 +9,13 @@ import AdminDashboard from "./pages/AdminDashboard";
 import NotFoundPage from "./pages/NotFound";
 import PairBotPage from "./pages/UserPairBot";
 import AdminManagement from "./pages/SuperAdminList";
+import FrontPage from "./pages/FrontPage/FrontPage";
 function App() {
   return (
   <Router>
     <Routes>
-      <Route path="/" element = { <AuthSystem />}/>
+      <Route path="/auth" element = { <AuthSystem />}/>
+      <Route path="/" element = { <FrontPage/>}/>
       <Route path = "/super-admin/dashboard" element = {
         <SuperAdminProtectedRoute>
           <SuperAdminDashboard />
