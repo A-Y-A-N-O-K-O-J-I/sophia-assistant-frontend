@@ -1,23 +1,24 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 // Components
-import UserSidebar from '../components/UserNavbar';
-import WelcomeHeader from './dashboard/WelcomeHeader';
-import BotStatusCard from './dashboard/BotStatusCard';
-import QuickActionsGrid from './dashboard/QuickActionGrid';
-import RecentActivity from './dashboard/RecentActivity';
+import UserSidebar from "../components/UserNavbar";
+import WelcomeHeader from "./dashboard/WelcomeHeader";
+import BotStatusCard from "./dashboard/BotStatusCard";
+import QuickActionsGrid from "./dashboard/QuickActionGrid";
+import RecentActivity from "./dashboard/RecentActivity";
 
 // Custom Hook
-import { useDashboardData } from '../hooks/useDashboardData';
+import { useDashboardData } from "../hooks/useDashboardData";
 
 const UserDashboard = () => {
   const navigate = useNavigate();
-  const { userInfo, botStatus, premiumBotStatus, loading, error, setError } = useDashboardData();
+  const { userInfo, botStatus, premiumBotStatus, loading, error, setError } =
+    useDashboardData();
 
   const handlePairBot = () => {
-    navigate('/pair-bot');
+    navigate("/pair-bot");
   };
 
   if (loading) {
@@ -52,32 +53,42 @@ const UserDashboard = () => {
               {error}
             </motion.div>
           )}
+          <div className="flex justify-center items-center pb-5 ">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3 }}
+            className={`mt-6 inline-block px-6 py-3 bg-gradient-to-r ${userInfo.plan === "premium" ? "from-yellow-500 to-yellow-600" : userInfo.plan ==="basic" ? "from-blue-500 to-green-400" : "from-gray-300 to-gray-500"}  text-white rounded-full font-semibold shadow-lg`}
+          >
+             {userInfo.plan === "premium" ? "👑 Premium" : userInfo.plan ==="basic" ? "⚡ Basic" : "🌱 Lite"} Account
+          </motion.div>
 
-          <BotStatusCard 
-            botStatus={botStatus} 
+          </div>
+          <BotStatusCard
+            botStatus={botStatus}
             onPairBot={handlePairBot}
-            label="Main Bot Status" 
+            label="Main Bot Status"
           />
 
           {userInfo.isPremium && (
-            <BotStatusCard 
-              botStatus={premiumBotStatus} 
+            <BotStatusCard
+              botStatus={premiumBotStatus}
               onPairBot={handlePairBot}
-              label="Premium Bot Status" 
+              label="Premium Bot Status"
             />
           )}
 
           <QuickActionsGrid onPairBot={handlePairBot} />
 
-          <RecentActivity 
-            botStatus={botStatus} 
+          <RecentActivity
+            botStatus={botStatus}
             onPairBot={handlePairBot}
             label="Main Bot Activity"
           />
 
           {userInfo.isPremium && (
-            <RecentActivity 
-              botStatus={premiumBotStatus} 
+            <RecentActivity
+              botStatus={premiumBotStatus}
               onPairBot={handlePairBot}
               label="Premium Bot Activity"
             />

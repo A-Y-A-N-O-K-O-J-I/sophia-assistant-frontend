@@ -4,7 +4,8 @@ export const useDashboardData = () => {
   const [userInfo, setUserInfo] = useState({
     name: 'John Doe',
     email: 'john@example.com',
-    isPremium: false
+    isPremium: false,
+    plan:"lite"
   });
 
   const [botStatus, setBotStatus] = useState({
@@ -71,7 +72,7 @@ export const useDashboardData = () => {
       } finally {
         setLoading(false);
       }
-    };
+    }; 
 
     fetchDashboardData();
   }, [API_URL]);

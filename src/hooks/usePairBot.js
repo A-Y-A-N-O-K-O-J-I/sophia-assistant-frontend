@@ -5,6 +5,7 @@ export const usePairBot = () => {
   const [userInfo, setUserInfo] = useState({
     name: '',
     email: '',
+    plan: "lite",
     isPremium: false
   });
   
@@ -43,6 +44,39 @@ export const usePairBot = () => {
 
   const API_URL = import.meta.env.VITE_API_URL;
 
+  // Get the appropriate endpoint based on plan and bot type
+  const getEndpoint = (action, botType) => {
+    if (botType === 'assistant') {
+      // Premium bot always uses premium endpoints
+      switch (action) {
+        case 'pair':
+          return '/user/premium-pair';
+        case 'qr':
+          return '/user/premium-qr-code';
+        case 'status':
+          return '/user/premium-bot-status';
+        case 'reset':
+          return '/user/reset-premium-bot';
+        default:
+          return '';
+      }
+    } else {
+      // Main bot - check plan
+      switch (action) {
+        case 'pair':
+          return userInfo.plan === 'lite' ? '/user/lite-pair' : '/user/pair';
+        case 'qr':
+          return userInfo.plan === 'lite' ? '/user/lite-qr-code' : '/user/qr-code';
+        case 'status':
+          return '/user/bot-status';
+        case 'reset':
+          return '/user/reset-bot';
+        default:
+          return '';
+      }
+    }
+  };
+
   // Check user premium status
   const checkPremiumStatus = async () => {
     try {
@@ -63,13 +97,19 @@ export const usePairBot = () => {
   // Get phone number for specific bot
   const getPhoneNumber = async (botType) => {
     try {
+      // For lite plan, send 'assistant', otherwise use the botType as is
+      let botParam = botType;
+      if (botType === 'main' && userInfo.plan === 'lite') {
+        botParam = 'assistant';
+      }
+      
       const response = await fetch(`${API_URL}/user/get-phone`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         credentials: 'include',
-        body: JSON.stringify({ bot: botType })
+        body: JSON.stringify({ bot: botParam })
       });
 
       if (!response.ok) throw new Error(`Failed to get ${botType} phone number`);
@@ -84,7 +124,7 @@ export const usePairBot = () => {
     } catch (err) {
       console.error(`Phone number fetch error for ${botType}:`, err);
       if (botType === 'main') {
-        setMainPhoneNumber('Error loading 1');
+        setMainPhoneNumber('Error loading');
       } else {
         setPremiumPhoneNumber('Error loading');
       }
@@ -94,7 +134,7 @@ export const usePairBot = () => {
   // Check bot status function
   const checkBotStatus = async (botType) => {
     try {
-      const endpoint = botType === 'main' ? '/user/bot-status' : '/user/premium-bot-status';
+      const endpoint = getEndpoint('status', botType);
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: "POST",
         credentials: 'include'
@@ -151,7 +191,7 @@ export const usePairBot = () => {
       setBotState(prev => ({ ...prev, loading: true }));
       setError(null);
       
-      const endpoint = botType === 'main' ? '/user/pair' : '/user/premium-pair';
+      const endpoint = getEndpoint('pair', botType);
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: {
@@ -191,7 +231,7 @@ export const usePairBot = () => {
       setBotState(prev => ({ ...prev, loading: true }));
       setError(null);
       
-      const endpoint = botType === 'main' ? '/user/qr-code' : '/user/premium-qr-code';
+      const endpoint = getEndpoint('qr', botType);
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: {
@@ -231,7 +271,7 @@ export const usePairBot = () => {
       setBotState(prev => ({ ...prev, loading: true }));
       setError(null);
       
-      const endpoint = botType === 'main' ? '/user/reset-bot' : '/user/reset-premium-bot';
+      const endpoint = getEndpoint('reset', botType);
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: {

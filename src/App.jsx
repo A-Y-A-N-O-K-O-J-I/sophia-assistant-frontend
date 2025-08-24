@@ -10,6 +10,7 @@ import NotFoundPage from "./pages/NotFound";
 import PairBotPage from "./pages/UserPairBot";
 import AdminManagement from "./pages/SuperAdminList";
 import FrontPage from "./pages/FrontPage/FrontPage";
+//import './utils/fetchIntercepter';
 function App() {
   return (
   <Router>
@@ -47,4 +48,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

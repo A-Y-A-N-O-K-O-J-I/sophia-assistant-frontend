@@ -56,16 +56,14 @@ const PairBotPage = () => {
             </p>
             
             {/* Premium Badge */}
-            {userInfo.isPremium && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.3 }}
-                className="mt-6 inline-block px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-full font-semibold shadow-lg"
+                className={`mt-6 inline-block px-6 py-3 bg-gradient-to-r ${userInfo.plan === "premium" ? "from-yellow-500 to-yellow-600" : userInfo.plan ==="basic" ? "from-blue-500 to-green-400" : "from-gray-300 to-gray-500"} text-white rounded-full font-semibold shadow-lg`}
               >
-                👑 Premium Account - Dual Bot Support
+               {userInfo.plan === "premium" ? "👑 Premium" : userInfo.plan ==="basic" ? "⚡ Basic" : "🌱 Lite"} Account - {userInfo.isPremium ? "Dual" : "Singular"} Bot Support
               </motion.div>
-            )}
           </motion.div>
 
           {/* Error/Success Alert */}
