@@ -10,6 +10,7 @@ import NotFoundPage from "./pages/NotFound";
 import PairBotPage from "./pages/UserPairBot";
 import AdminManagement from "./pages/SuperAdminList";
 import FrontPage from "./pages/FrontPage/FrontPage";
+import EditBotInfo from "./pages/EditInfo";
 //import './utils/fetchIntercepter';
 function App() {
   return (
@@ -32,6 +33,11 @@ function App() {
         <UserDashboard />
         </UserProtectedRoute>
         } />
+        <Route path="/edit-info" element ={
+          <UserProtectedRoute>
+            <EditBotInfo/>
+          </UserProtectedRoute>
+        }/>
       <Route path="/admin/dashboard" element = {
         <AdminProtectedRoute>
           <AdminDashboard />

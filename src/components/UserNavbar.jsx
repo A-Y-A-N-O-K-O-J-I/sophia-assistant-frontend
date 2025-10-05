@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Menu, 
@@ -8,11 +8,18 @@ import {
   Settings, 
   LogOut 
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+
 const UserSidebar = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const [activeRoute, setActiveRoute] = useState('/dashboard');
+  const [activeRoute, setActiveRoute] = useState(location.pathname);
+
+  // Update active route when location changes
+  useEffect(() => {
+    setActiveRoute(location.pathname);
+  }, [location.pathname]);
 
   const menuItems = [
     {
@@ -38,7 +45,7 @@ const UserSidebar = () => {
   const handleNavigation = (route, path) => {
     setActiveRoute(route);
     setIsOpen(false);
-   navigate(path)
+    navigate(path);
   };
 
   const handleLogout = () => {
@@ -85,6 +92,7 @@ const UserSidebar = () => {
           <div className="flex-1 py-8">
             {menuItems.map((item) => {
               const Icon = item.icon;
+              const isActive = activeRoute === item.route;
               return (
                 <motion.button
                   key={item.name}
@@ -92,7 +100,7 @@ const UserSidebar = () => {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleNavigation(item.route, item.path)}
                   className={`w-full p-4 flex items-center justify-center mb-2 transition-all duration-300 ${
-                    activeRoute === item.route
+                    isActive
                       ? 'bg-purple-500 bg-opacity-20 border-r-4 border-purple-500'
                       : 'hover:bg-purple-500 hover:bg-opacity-10'
                   }`}
@@ -100,7 +108,7 @@ const UserSidebar = () => {
                   <Icon 
                     size={24} 
                     className={`${
-                      activeRoute === item.route ? 'text-white' : 'text-purple-200'
+                      isActive ? 'text-white' : 'text-purple-200'
                     }`}
                   />
                 </motion.button>
@@ -166,6 +174,7 @@ const UserSidebar = () => {
               <div className="flex-1 py-6 px-4">
                 {menuItems.map((item, index) => {
                   const Icon = item.icon;
+                  const isActive = activeRoute === item.route;
                   return (
                     <motion.button
                       key={item.name}
@@ -176,7 +185,7 @@ const UserSidebar = () => {
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleNavigation(item.route, item.path)}
                       className={`w-full p-4 flex items-center space-x-4 rounded-xl mb-2 transition-all duration-300 ${
-                        activeRoute === item.route
+                        isActive
                           ? 'bg-purple-500 bg-opacity-20 text-white border-l-4 border-purple-500'
                           : 'text-purple-200 hover:bg-purple-500 hover:bg-opacity-10 hover:text-white'
                       }`}
@@ -241,6 +250,7 @@ const UserSidebar = () => {
               <div className="flex-1 py-8 px-4">
                 {menuItems.map((item, index) => {
                   const Icon = item.icon;
+                  const isActive = activeRoute === item.route;
                   return (
                     <motion.button
                       key={item.name}
@@ -251,7 +261,7 @@ const UserSidebar = () => {
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleNavigation(item.route, item.path)}
                       className={`w-full p-3 flex items-center space-x-3 rounded-xl mb-2 transition-all duration-300 ${
-                        activeRoute === item.route
+                        isActive
                           ? 'bg-purple-500 bg-opacity-20 text-white border-l-4 border-purple-500'
                           : 'text-purple-200 hover:bg-purple-500 hover:bg-opacity-10 hover:text-white'
                       }`}

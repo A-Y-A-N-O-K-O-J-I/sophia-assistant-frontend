@@ -90,7 +90,7 @@ const AboutPage = () => {
                 Unlike basic chatbots like Meta AI or ChatGPT that handle simple tasks, Sophia Assistant is a comprehensive digital companion built specifically for WhatsApp power users.
               </p>
               <p className="text-gray-600 mb-6">
-                Using advanced Baileys integration, Sophia seamlessly connects to your WhatsApp through linked devices, providing enterprise-grade automation while maintaining complete privacy and control.
+                Using advanced Baileys integration, The  Enhanced Large Language AI (Sophia) seamlessly connects to your WhatsApp through linked devices, providing enterprise-grade automation while maintaining complete privacy and control.
               </p>
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">

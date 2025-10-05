@@ -80,7 +80,7 @@ const HomePage = () => {
                 transition={{ duration: 0.8, delay: 0.6 }}
               >
                 <motion.button
-                  onClick={() => window.open('https://wa.me/2348073765008?text=I\'d like to get Admin code for the Sophia Assistant login', '_blank')}
+                  onClick={() => window.open('https://wa.me/2347017895743?text=I\'d like to get Admin code for the Sophia Assistant login', '_blank')}
                   className="bg-gradient-to-r from-purple-600 to-purple-800 text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-2xl transition-all duration-300 flex items-center justify-center"
                   whileHover={{ 
                     scale: 1.05, 
@@ -88,15 +88,16 @@ const HomePage = () => {
                   }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  Get Admin Code <ArrowRight className="ml-2" size={20} />
+                  Buy Now <ArrowRight className="ml-2" size={20} />
                 </motion.button>
-                {/* <motion.button
+                <motion.button
                   className="border-2 border-purple-600 text-purple-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-purple-600 hover:text-white transition-all duration-300"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  onClick={()=> window.open('https://chat.whatsapp.com/IXLTv72did0H8Gs0n0mnvU','_blank')}
                 >
-                  Watch Demo
-                </motion.button> */}
+                  Join Trial Group
+                </motion.button>
               </motion.div>
             </motion.div>
 
