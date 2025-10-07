@@ -64,6 +64,7 @@ const AdminCodeGenerator = () => {
       const response = await fetch(`${API_URL}/admin/generate-admin-code`, {
         method: 'POST',
         headers: {
+          'authorization' : `Bearer ${localStorage.getItem('accessToken')}`,
           'Content-Type': 'application/json',
         },
         credentials: "include",
