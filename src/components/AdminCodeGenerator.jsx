@@ -60,11 +60,15 @@ const AdminCodeGenerator = () => {
     try {
       setGenerating(true);
       setError('');
-      
+      const accessToken = localStorage.getItem("accessToken");
+      if(!accessToken){
+        setError('Access Token Not found')
+        return;
+      }
       const response = await fetch(`${API_URL}/admin/generate-admin-code`, {
         method: 'POST',
         headers: {
-          'authorization' : `Bearer ${localStorage.getItem('accessToken')}`,
+          'authorization' : `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         credentials: "include",
