@@ -5,7 +5,6 @@ import {
   Copy,
   Trash2,
   Check,
-  X,
   AlertCircle,
   CheckCircle,
   Users,
@@ -45,11 +44,19 @@ const AdminManagement = () => {
   const fetchAdmins = async () => {
     try {
       setLoadingAdmins(true);
+      const accessToken = localStorage.getItem('accessToken');
+      
+      if (!accessToken) {
+        setError("Authentication required. Please login again.");
+        setLoadingAdmins(false);
+        return;
+      }
+
       const response = await fetch(`${API_URL}/super-admin/view-all-admins`, {
         method: "GET",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`
         },
       });
 
@@ -83,11 +90,19 @@ const AdminManagement = () => {
     setGeneratedLink("");
 
     try {
+      const accessToken = localStorage.getItem('accessToken');
+      
+      if (!accessToken) {
+        setError("Authentication required. Please login again.");
+        setLoading(false);
+        return;
+      }
+
       const response = await fetch(`${API_URL}/super-admin/invite-admin`, {
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`
         },
         body: JSON.stringify(formData),
       });
@@ -125,11 +140,20 @@ const AdminManagement = () => {
     setError("");
 
     try {
+      const accessToken = localStorage.getItem('accessToken');
+      
+      if (!accessToken) {
+        setError("Authentication required. Please login again.");
+        setRemoving(null);
+        setRemoveConfirm(null);
+        return;
+      }
+
       const response = await fetch(`${API_URL}/super-admin/remove-admin/${adminId}`, {
         method: "DELETE",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`
         },
       });
 
@@ -158,8 +182,8 @@ const AdminManagement = () => {
   };
 
   return (
-    <>
-    <SuperAdminSidebar />
+  <>
+    <SuperAdminSidebar/>
     <div className="ml-20 lg:ml-20 min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
@@ -444,7 +468,7 @@ const AdminManagement = () => {
         </AnimatePresence>
       </div>
     </div>
-    </>
+  </>
   );
 };
 

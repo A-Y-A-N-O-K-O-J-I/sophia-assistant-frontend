@@ -33,6 +33,7 @@ const SuperAdminDashboard = () => {
         const response = await fetch(`${API_URL}/super-admin/dashboard`, {
           method: 'GET',
           headers: {
+            'authorization':`Bearer ${localStorage.getItem("accessToken")}`,
             'Content-Type': 'application/json',
           },
           credentials:"include"

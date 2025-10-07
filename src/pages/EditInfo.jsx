@@ -32,8 +32,18 @@ function EditBotInfo() {
     setMessage({ type: "", text: "" });
     
     try {
+      const accessToken = localStorage.getItem('accessToken');
+      
+      if (!accessToken) {
+        setMessage({ type: "error", text: "You are not authenticated. Please login again." });
+        setLoading(false);
+        return;
+      }
+
       const response = await axios.put(`${baseUrl}/user/edit-bot-name`, formData, {
-        withCredentials: true
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
       });
       
       setMessage({ type: "success", text: "Bot name updated successfully!" });

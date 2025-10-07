@@ -63,11 +63,18 @@ export const makeAuthRequest = async (isSignup, userType, loginForm, signupForm)
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(body),
-    credentials: "include"
+    body: JSON.stringify(body)
   });
 
   const data = await response.json();
+  
+  // Store tokens in localStorage after successful login
+  if (!isSignup && response.ok && data.accessToken) {
+    localStorage.setItem('accessToken', data.accessToken);
+    if (data.refreshToken) {
+      localStorage.setItem('refreshToken', data.refreshToken);
+    }
+  }
   
   return { response, data };
 };

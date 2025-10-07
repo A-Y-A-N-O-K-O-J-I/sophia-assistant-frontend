@@ -11,6 +11,7 @@ import PairBotPage from "./pages/UserPairBot";
 import AdminManagement from "./pages/SuperAdminList";
 import FrontPage from "./pages/FrontPage/FrontPage";
 import EditBotInfo from "./pages/EditInfo";
+import Logout from "./pages/LogOut";
 //import './utils/fetchIntercepter';
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
     <Routes>
       <Route path="/auth" element = { <AuthSystem />}/>
       <Route path="/" element = { <FrontPage/>}/>
+      <Route path = "/logout" element = {<Logout/>} />
       <Route path = "/super-admin/dashboard" element = {
         <SuperAdminProtectedRoute>
           <SuperAdminDashboard />

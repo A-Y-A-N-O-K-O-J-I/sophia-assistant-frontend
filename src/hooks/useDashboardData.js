@@ -5,7 +5,7 @@ export const useDashboardData = () => {
     name: 'John Doe',
     email: 'john@example.com',
     isPremium: false,
-    plan:"lite"
+    plan: "lite"
   });
 
   const [botStatus, setBotStatus] = useState({
@@ -31,14 +31,22 @@ export const useDashboardData = () => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        
+        setError('');
+
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+          setError('Authentication required. Please log in again.');
+          setLoading(false);
+          return;
+        }
+
         // Fetch main dashboard data
         const mainResponse = await fetch(`${API_URL}/user/dashboard`, {
           method: 'POST',
           headers: {
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
-          credentials: "include"
         });
 
         if (mainResponse.ok) {
@@ -51,9 +59,9 @@ export const useDashboardData = () => {
             const premiumResponse = await fetch(`${API_URL}/user/premium-dashboard`, {
               method: 'POST',
               headers: {
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
               },
-              credentials: "include"
             });
 
             if (premiumResponse.ok) {
@@ -72,7 +80,7 @@ export const useDashboardData = () => {
       } finally {
         setLoading(false);
       }
-    }; 
+    };
 
     fetchDashboardData();
   }, [API_URL]);

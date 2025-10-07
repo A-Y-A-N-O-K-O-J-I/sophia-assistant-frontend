@@ -80,9 +80,16 @@ export const usePairBot = () => {
   // Check user premium status
   const checkPremiumStatus = async () => {
     try {
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token');
+      }
+
       const response = await fetch(`${API_URL}/user/dashboard`, {
         method: "POST",
-        credentials: 'include'
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
       });
 
       if (!response.ok) throw new Error('Failed to check premium status');
@@ -97,6 +104,11 @@ export const usePairBot = () => {
   // Get phone number for specific bot
   const getPhoneNumber = async (botType) => {
     try {
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token');
+      }
+
       // For lite plan, send 'assistant', otherwise use the botType as is
       let botParam = botType;
       if (botType === 'main' && userInfo.plan === 'lite') {
@@ -106,9 +118,9 @@ export const usePairBot = () => {
       const response = await fetch(`${API_URL}/user/get-phone`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
         },
-        credentials: 'include',
         body: JSON.stringify({ bot: botParam })
       });
 
@@ -134,10 +146,17 @@ export const usePairBot = () => {
   // Check bot status function
   const checkBotStatus = async (botType) => {
     try {
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token');
+      }
+
       const endpoint = getEndpoint('status', botType);
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: "POST",
-        credentials: 'include'
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
       });
 
       if (!response.ok) throw new Error(`Failed to check ${botType} bot status`);
@@ -165,10 +184,17 @@ export const usePairBot = () => {
   // Fetch API key (shared for both bots)
   const fetchApiKey = async () => {
     try {
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token');
+      }
+
       setApiKeyLoading(true);
       const response = await fetch(`${API_URL}/user/api-key`, {
         method: 'POST',
-        credentials: "include"
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
       });
       
       if (!response.ok) throw new Error('Failed to fetch API key');
@@ -186,6 +212,11 @@ export const usePairBot = () => {
   // Generate pairing code
   const generatePairingCode = async (botType) => {
     try {
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token');
+      }
+
       const setBotState = botType === 'main' ? setMainBot : setPremiumBot;
       
       setBotState(prev => ({ ...prev, loading: true }));
@@ -195,9 +226,9 @@ export const usePairBot = () => {
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
         },
-        credentials: "include",
         body: JSON.stringify({ bot: botType })
       });
 
@@ -226,6 +257,11 @@ export const usePairBot = () => {
   // Generate QR code
   const generateQRCode = async (botType) => {
     try {
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token');
+      }
+
       const setBotState = botType === 'main' ? setMainBot : setPremiumBot;
       
       setBotState(prev => ({ ...prev, loading: true }));
@@ -235,9 +271,9 @@ export const usePairBot = () => {
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
         },
-        credentials: "include",
         body: JSON.stringify({ bot: botType })
       });
 
@@ -266,6 +302,11 @@ export const usePairBot = () => {
   // Reset connection
   const resetConnection = async (botType) => {
     try {
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token');
+      }
+
       const setBotState = botType === 'main' ? setMainBot : setPremiumBot;
       
       setBotState(prev => ({ ...prev, loading: true }));
@@ -275,9 +316,9 @@ export const usePairBot = () => {
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
         },
-        credentials: "include",
         body: JSON.stringify({ bot: botType })
       });
 

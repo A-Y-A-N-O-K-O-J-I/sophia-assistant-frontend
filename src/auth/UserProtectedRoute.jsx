@@ -10,7 +10,22 @@ export default function UserProtectedRoute({ children }) {
 
   const checkToken = async () => {
     try {
-      const res = await axios.post(`${API_URL}/auth/check-token`, {}, { withCredentials: true });
+      const accessToken = localStorage.getItem('accessToken');
+      
+      if (!accessToken) {
+        return false;
+      }
+
+      const res = await axios.post(
+        `${API_URL}/auth/check-token`, 
+        {}, 
+        { 
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      );
+
       if (res.data.status === 200) {
         setUserRole(res.data.role);
         return true;
@@ -26,8 +41,28 @@ export default function UserProtectedRoute({ children }) {
 
   const refreshToken = async () => {
     try {
-      const res = await axios.post(`${API_URL}/auth/refresh-token`, {}, { withCredentials: true });
-      return res.data.status === 200;
+      const refreshToken = localStorage.getItem('refreshToken');
+      
+      if (!refreshToken) {
+        return false;
+      }
+
+      const res = await axios.post(
+        `${API_URL}/auth/refresh-token`, 
+        {}, 
+        { 
+          headers: {
+            Authorization: `Bearer ${refreshToken}`
+          }
+        }
+      );
+
+      if (res.data.status === 200) {
+        // Store the new access token
+        localStorage.setItem('accessToken', res.data.accessToken);
+        return true;
+      }
+      return false;
     } catch {
       return false;
     }
