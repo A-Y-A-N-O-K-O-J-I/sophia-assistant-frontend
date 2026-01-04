@@ -1,7 +1,7 @@
 // components/Navbar.jsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Bot, Globe } from 'lucide-react';
+import { Menu, X, Bot, LogIn } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 const Navbar = ({ currentPage, setCurrentPage }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -71,8 +71,8 @@ const Navbar = ({ currentPage, setCurrentPage }) => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Globe size={18} />
-              <span>Access Webpage</span>
+              <LogIn size={18} />
+              <span>Login</span>
             </motion.button>
 
             {/* Get Started Button */}
@@ -127,8 +127,9 @@ const Navbar = ({ currentPage, setCurrentPage }) => {
                   onClick={() => navigate("/auth")} // Replace with actual webpage URL
                   className="flex items-center space-x-2 w-full border-2 border-purple-600 text-purple-600 px-4 py-2 rounded-full font-medium justify-center"
                 >
-                  <Globe size={18} />
-                  <span>Access Webpage</span>
+                  
+                  <LogIn size={18} />
+                  <span>Login</span>
                 </button>
                 <button
                   onClick={() => window.open('https://wa.me/2348073765008?text=I\'d like to get Admin code for the Sophia Assistant login', '_blank')}
